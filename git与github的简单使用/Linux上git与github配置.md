@@ -23,3 +23,5 @@ git config --global https.proxy 127.0.0.1:7890   //梯子的端口
 1、git clone  
 2、在vscode中打开  
 3、暂存、拉取、推送  
+
+--注意：不要每次上传50M以上的文件。
