@@ -10,7 +10,7 @@ catkin是ros定制的编译构建系统，对cmake的扩展。支持大体量工
 编译命令是在工作空间下catkin_make
 
 文件系统：
-roS 的 Catkin 编译系统的一个特点是将程序做成 package (称为 catkin package 或者 ROS package) 的形式，可以理解成模块化,一个包可能会有很多个节点（node）。 
+ros的 Catkin 编译系统的一个特点是将程序做成 package (称为 catkin package 或者 ROS package) 的形式，可以理解成模块化,一个包可能会有很多个节点（node）。 
 典型的 ROS workspace 中包含 src, build, devel 三个文件夹，在分享时只需要分享 src 中的某个 package 即可，所有的编译信息都在此 package 中。
 
 

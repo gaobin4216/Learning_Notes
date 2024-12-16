@@ -1,5 +1,5 @@
 ROS使用第一步：
-Ros安装好之后，可以从ros index中sudo apt install ros-neotic-rqt-xxxxx的软件包
+Ros安装好之后，可以从ros index中sudo apt install ros-neotic-xxxxx的软件包
 然后先运行roscore  （ros的核心）
 然后重开一个命令行开始rosrun下载的软件包中的节点。 
 apt上下载的软件包都是编译好的可执行文件，在opt下ros的share中，ROS运行时需要找到自己依赖的软件包的位置也在里面
@@ -30,7 +30,7 @@ ros的通信机制是一种松耦合分布式通信。主要概念有
  1、命令行&编译器  
  2、launch文件：通过XML文件实现多节点的配置和启动，自动启动ros master  
  3、TF坐标变换库  
- 4、QT工具箱  
+ 4、QT工具箱，rqt
  5、Rviz：三维可视化工具 ，显示数据  
  6、gazebo：独立于ROS，但提供了ros接口，三维物理仿真平台，创造数据
  ![alt text](image-15.png)
