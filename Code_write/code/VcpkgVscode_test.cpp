@@ -7,6 +7,6 @@ int main()
     Matrixcomp << cos(MM_PI * 3 / 4), -sin(MM_PI * 3 / 4), 0,
 			sin(MM_PI * 3 / 4), cos(MM_PI * 3 / 4), 0,
 			0, 0, 1;
-   std::cout<<Matrixcomp;
-   return 0;
+    std::cout<<Matrixcomp;
+    return 0;
 }
