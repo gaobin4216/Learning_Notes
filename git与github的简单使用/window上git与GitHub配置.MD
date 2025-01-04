@@ -13,10 +13,10 @@
 ```
 git config --global user.name "gaobin4216"        //用户名
 git config --global user.email gaobin4216@gmail.com //github的油箱
-git config --global --unset https.proxy
+git config --global --unset https.proxy   //取消代理
 git config --global --unset http.proxy
-git config --global http.proxy 127.0.0.1:7890    //梯子的端口
-git config --global https.proxy 127.0.0.1:7890   //梯子的端口
+git config --global http.proxy 127.0.0.1:7890    //设置，梯子的端口
+git config --global https.proxy 127.0.0.1:7890   //设置梯子的端口
 ```
 # STEP6：使用
 1、git clone  
