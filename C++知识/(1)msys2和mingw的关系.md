@@ -8,3 +8,25 @@
 ### MSYS2详细说明
 - MSYS2（Minimal SYStem 2）是一个集成了大量的GNU工具链、工具和库的开源软件包集合。它提供了一个类似于Linux的shell环境，可以在Windows系统中编译和运行许多Linux应用程序和工具
 - MSYS2与MinGW-w64相似，但比MinGW-w64更完整和稳定，提供了Pacman包管理器以方便用户安装和管理软件包。不需网上搜索安装包，下载安装。直接运用pacman进行下载，并且升级简单。
+### MSYS2核心特点
+- 类Unix环境提供Bash、Coreutils、Grep等Unix工具，支持Shell脚本运行，弥补Windows命令行功能的不足。
+- MinGW-w64 工具链支持生成原生Windows程序（无需依赖Cygwin DLL），提供32/64位、UCRT（Universal C Runtime）等多种运行时环境。
+- Arch Linux 包管理通过 pacman 管理软件包，可安装数千个预编译库（如GCC、Python、OpenSSL）。
+- 多环境支持，MSYS2 安装后提供多个终端入口，每个终端对应不同的开发环境和工具链，​核心区别在于目标平台、路径处理方式和运行时依赖。  
+  **用户可通过不同终端启动脚本切换开发环境：**  
+  • MSYS：基于Cygwin的POSIX兼容环境（适合移植Unix工具）。  
+  • MINGW64：生成64位原生Windows程序（默认使用MSVCRT运行时）。  
+  • UCRT64：使用Windows Universal C Runtime（兼容性更好）。  
+  • CLANG64：基于LLVM/Clang的工具链。
+
+[不同的终端对应不同的环境和不同的工具链](https://blog.csdn.net/pumpkin84514/article/details/144410387)  
+```  
+不同的终端对应不同的环境和不同的工具链，不同的终端安装名不同，
+
+运行 POSIX 命令（如 git、make）	     msys2.exe  
+编译 32 位 Windows 程序	            mingw32.exe  
+编译 64 位 Windows 程序	            mingw64.exe  
+编译 64 位 Windows 程序，使用 UCRT	 ucrt64.exe  
+使用 Clang 而不是 GCC	            clang64.exe  
+编写跨平台 POSIX 代码（类似 Cygwin）  msys2.exe  
+```
