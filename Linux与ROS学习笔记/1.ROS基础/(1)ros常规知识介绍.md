@@ -49,3 +49,5 @@ ros的通信机制是一种松耦合分布式通信。主要概念有
 应用功能：Moveit!  
 生态系统：Moveit api、官方教程、机器人功能包
 
+# ROS的局限性
+![alt text](image-21.png)
