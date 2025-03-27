@@ -1,4 +1,5 @@
 ## USB转CAN适配器连接CAN设备,检查已经连接的can设备
+**注意U转can的驱动，终端电阻，稳压模块**
 1、确认USB转CAN适配器已被系统识别
 命令：```lsusb```
 作用：检查USB转CAN适配器是否被正确识别为USB设备。
@@ -22,3 +23,18 @@ candump can0  # 接收数据
 cansend can0 123#AABBCCDD  # 发送测试帧
 ```
 作用：实时监听CAN总线数据，验证设备通信是否正常。若设备已连接且总线有数据，会显示实时报文。
+
+## 钛虎关节模组的SDO控制实例，轮廓速度模式
+can_id为7
+```
+cansend can0 607#2b7a6000d56c0000
+cansend can0 607#2b4060000f000000
+cansend can0 607#2b4060001f000000
+cansend can0 607#2B40600006000000
+cansend can0 607#2B4060000F000000
+cansend can0 607#2F60600003000000
+cansend can0 607#238360000A000000
+cansend can0 607#238460000A000000
+cansend can0 607#23816000D0070000
+cansend can0 607#23FF6000E8030000
+```
