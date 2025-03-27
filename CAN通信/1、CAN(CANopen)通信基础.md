@@ -1,13 +1,13 @@
 # CAN通信基础
 ## 1、CAN定义
-### **概念**
+### 概念
 CAN是控制器局域网络(Controller Area Network)的简称，1986年被德国研发和生产汽车电子产品著称的BOSCH公司所开发，并最终成为国际标准（ISO11898），是国际上应用最广泛的现场总线之一。 在北美和西欧，CAN总线协议已经成为汽车计算机控制系统和嵌入式工业控制局域网的标准总线。
 CAN是国际标准化的串行通信协议，采用数据块编码的方式，数据块根据帧的类型，能够让挂载在总线上的不同节点接收到相同的数据，再根据每个节点的配置对信息进行选择性处理（接收or丢弃）。
 
 控制器局域网controller area network，异步通讯，有can高和can低两条信号线，构成一组差分信号线；
 差分信号抗干扰能力强，当外界存在噪声干扰时，几乎会同时耦合到两条信号线上，而接收端只关心两个信号的差值，所以外界的共模噪声可以被完全抵消。
 
-### **硬件连接**
+### 硬件连接
 CAN总线可以开环也可以闭环
 CAN 通讯节点由一个 CAN 控制器及 CAN 收发器组成，控制器与收发器之间通过 CAN_Tx 及CAN_Rx 信号线相连，收发器与 CAN 总线之间使用 CAN_High 及 CAN_Low 信号线相连。其中CAN_Tx 及 CAN_Rx 使用普通的类似 TTL 逻辑信号，而 CAN_High 及 CAN_Low 是一对差分信号线，使用比较特别的差分信号。
 ![alt text](image.png)
@@ -15,7 +15,7 @@ CAN 通讯节点由一个 CAN 控制器及 CAN 收发器组成，控制器与收
 ![alt text](image-1.png)
 网络的两端必须有120Ω的终端电阻。所以在设计线路板的时候都要有一个120欧的电阻。通过跳线或者拨码开关选择是否使用这个电阻。为什么是120Ω，因为电缆的特性阻抗为120Ω，为了模拟无限远的传输线，平衡信号完整性、抗干扰能力和功耗。
 
-### **差分信号**
+### 差分信号
 ![alt text](image-2.png)
 ![alt text](image-3.png)
 CAN 通讯是半双工的，收发数据需要分时进行。
@@ -53,16 +53,16 @@ CAN 通讯是半双工的，收发数据需要分时进行。
 ## 2、canopen概述
 ![alt text](image-28.png)
 ```
-canopen采用小端模式，16进制显示，下图表示0x601 8 40 6063 00 00 00 00 00
+canopen采用小端模式，表示的是字节序，16进制显示，下图实际表示 40 6063 00 00 00 00 00
 ```
 ![alt text](image-27.png)
 ### (1)Object Dictionary(OD对象字典)
+![alt text](image-51.png)
 ![alt text](image-16.png)
-*对象字典的位置在*
+*对象字典的索引位置在*
 ![alt text](image-24.png)
 例如：
 ![alt text](image-26.png)
-![alt text](image-22.png)
 ![alt text](image-17.png)
 ![alt text](image-12.png)
 ### (2)通讯标识符
@@ -73,8 +73,58 @@ canopen采用小端模式，16进制显示，下图表示0x601 8 40 6063 00 00 0
 ![alt text](image-21.png)
 DLC是发送报文时必须设置的字段，其值需严格等于数据域的实际字节数。正确配置DLC是保障CANopen通信可靠性的基础，尤其在实时性要求高的PDO传输和分段SDO操作中。can-utils的cansend工具会根据用户输入的数据十六进制字符数量自动计算DLC。
 
+### (4)CANopen状态机
+设备上电之后进入初始化状态；
+初始化结束之后自动进入预操作状态；
+**六种不同的报文服务**
+![alt text](image-29.png)
+![alt text](image-49.png)
+### (5)CANopen状态管理报文
+#### a、NMT模块控制报文
+![alt text](image-30.png)
+#### b、NMT节点保护报文
+![alt text](image-31.png)
+#### c、心跳报文
+![alt text](image-33.png)
+#### d、NMT BOOT-UP启动报文
+![alt text](image-34.png)
+#### e、紧急报文
+![alt text](image-35.png)
 
-# CAN与CANOPEN
+### (6)SDO通讯
+![alt text](image-36.png)
+![alt text](image-37.png)
+#### SDO读报文(读从站数据)
+![alt text](image-38.png)
+![alt text](image-39.png)
+![alt text](image-40.png)
+![alt text](image-41.png)
+#### SDO写报文(往从站写数据)
+![alt text](image-42.png)
+![alt text](image-43.png)
+![alt text](image-44.png)
+![alt text](image-45.png)
+### (7)PDO通讯
+* PDO通信是基于生产者/消费者的通讯模式，每个PDO有一个唯一的标识符且可以通过一个节点发送，但有多个节点可以接收。由生产者发送的 PDO称为发送PDO(TPDO)，同样消费者接收的PDO称为接收PDO(即RPDO)。PDO 的接收不需要消费者的确认。
+* 发送接受是相对从节点来说的。
+* PDO则不使用Index和SubIndex，它是两个CAN(生产者、消费者)节点间约定好传输的数据内容对应哪些对象字典索引，收到数据后就直接读写相应的对象字典索引里的值
+![alt text](image-50.png)
+#### PDO通讯参数
+![alt text](image-47.png)
+![alt text](image-48.png)
+![alt text](image-52.png)
+![alt text](image-53.png)
+#### PDO映射参数
+![alt text](image-55.png)
+#### PDO报文
+**后两位为数据长度：
+0x20，表示32，32位4个字节；
+0x10，表示16，16位2个字节；
+0x08，表示8，8位1个字节**
+![alt text](image-56.png)
+![alt text](image-57.png)
+
+# CAN与CANOPEN对比
 CAN（Controller Area Network）和CANopen都是用于实时通信的标准协议，主要应用于工业控制和汽车电子领域。它们之间的区别主要体现在以下几个方面：
 1. 功能层次：CAN是一种底层通信协议，提供了数据传输和错误检测等基本功能。而CANopen是基于CAN协议的应用层协议，提供了更高层次的功能，如设备配置、网络管理、数据传输协议等。
 2. 应用领域：CAN通常用于连接较简单的节点，如传感器、执行器等，广泛应用于汽车电子、工业控制等领域。而CANopen更多地用于复杂的系统中，如工业自动化、机器人控制等。CANopen提供了更多的特性和功能，适用于大规模网络中的设备间通信和控制。
