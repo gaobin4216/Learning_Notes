@@ -18,7 +18,8 @@
 sudo ip link set can0 type can bitrate 1000000 #配置波特率
 sudo ip link set up can0 #启动can接口 ，关闭时 sudo ip link set can0 down
 sudo ip link set can0 txqueuelen 1000 #优化传输队列，在高实时性系统中（如机器人控制），增大txqueuelen可避免数据拥堵
-ip -details link show can0 #查看接口状态
+sudo ip -details link show can0 #查看接口状态
+sudo ip link set can0 down #关闭can0接口
 candump can0  # 接收数据
 cansend can0 123#AABBCCDD  # 发送测试帧
 ```
