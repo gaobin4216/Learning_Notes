@@ -6,7 +6,7 @@ Cygwin由两部分组成：
 * 一个C标准库形式的动态链接库(DLL，dynamic-link library)，作为POSIX API的兼容层。
 * 一个提供类似unix外观和操作感觉的被广泛使用的软件工具和应用程序集合。
   
-**Cygwin是由一个库和一个GNU开发工具链组成的；这个库实现了POSIX系统调用API的功能，它可以把部分POSIX调用转换成Windows系统调用，从而支持用户在Windows平台上可以运行大量与Unix系统类似的应用程序；而这个GNU开发工具链（包括GCC和GDB）则支持让用户进行软件开发。**
+**Cygwin是由一个库和一个GNU开发工具链组成的；这个库实现了POSIX系统调用API的功能，它可以把部分POSIX调用转换成Windows系统调用（POSIX为不同Unix系统提供统一的API（应用程序接口）），从而支持用户在Windows平台上可以运行大量与Unix系统类似的应用程序；而这个GNU开发工具链（包括GCC和GDB）则支持让用户进行软件开发。**
 
 # MinGW(Minimalist GNU for Windows)  
 * MinGW是一种用于开发原生 Windows 应用的最小化 GNU 开发环境，可以理解为开发 Windows 程序的 gcc，也就是说这个gcc就是专门编译出能在windows平台运行的程序的编译器。MinGW 本身并不一定要运行在 Windows 下，Linux 上也可以通过 MinGW 工具链交叉编译 Windows 程序
