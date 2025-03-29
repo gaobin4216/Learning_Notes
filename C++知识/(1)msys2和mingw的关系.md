@@ -1,5 +1,13 @@
 # Cygwin
-* Cygwin是一个支持在Windows平台上运行的Unix环境，它最早的版本于1995年10月发布，最新的一个稳定版本3.4.6则于2023年2月14日发布。其目标是让Windows用户可以使用GNU和开源工具，如bash, gcc, less等。但是，Cygwin并不是一个支持运行原生Linux应用或者让Windows应用感知Unix功能的工具；它实际上是一个大型的GNU和开源工具集合，支持在windows上提供类似于Linux distribution 版本的功能（Linux_distribution的目标是让用户在不同的硬件平台上使用类似于Unix的功能和体验），允许用户在Windows系统上运行许多原本只能在Unix或Linux系统上运行的软件。
+* Cygwin是一个支持在Windows平台上运行的Unix环境，它最早的版本于1995年10月发布。其目标是让Windows用户可以使用GNU和开源工具，如bash, gcc, less等。但是，Cygwin并不是一个支持运行原生Linux应用或者让Windows应用感知Unix功能的工具；它实际上是一个大型的GNU和开源工具集合，支持在windows上提供类似于Linux distribution 版本的功能（Linux_distribution的目标是让用户在不同的硬件平台上使用类似于Unix的功能和体验），允许用户在Windows系统上运行许多原本只能在Unix或Linux系统上运行的软件。
+
+Cygwin由两部分组成：
+
+* 一个C标准库形式的动态链接库(DLL，dynamic-link library)，作为POSIX API的兼容层。
+* 一个提供类似unix外观和操作感觉的被广泛使用的软件工具和应用程序集合。
+  
+**Cygwin是由一个库和一个GNU开发工具链组成的；这个库实现了POSIX系统调用API的功能，它可以把部分POSIX调用转换成Windows系统调用，从而支持用户在Windows平台上可以运行大量与Unix系统类似的应用程序；而这个GNU开发工具链（包括GCC和GDB）则支持让用户进行软件开发。**
+
 # MinGW(Minimalist GNU for Windows)  
 * MinGW是一种用于开发原生 Windows 应用的最小化 GNU 开发环境，可以理解为开发 Windows 程序的 gcc，也就是说这个gcc就是专门编译出能在windows平台运行的程序的编译器。MinGW 本身并不一定要运行在 Windows 下，Linux 上也可以通过 MinGW 工具链交叉编译 Windows 程序
 # MSYS2
