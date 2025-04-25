@@ -29,22 +29,18 @@ UNIX 的 fork() 调用 → Windows 的 CreateProcess() 实现多进程。
   * GNU Binutils​​：包括汇编器（as）、链接器（ld）等底层工具。
   * GDB 调试器​​：提供源码级调试能力。
   * Windows API 头文件与库​​：如 DirectX、ReactOS DDK，覆盖 Win32/Win64 API。
-
-
-
-
 # MSYS2
 * MSYS (Minimal SYStem) 是一系列 GNU 工具（bash、make、gawk、grep等）的集合（基于旧版 Cygwin），用于弥补 Windows cmd shell 的不足，让 MinGW 在 Windows 上更便于使用。
 * MSYS2 是一个独立的 MSYS 重写（因为 MinGW 和 MSYS 更新缓慢），基于新一代 Cygwin 和 MinGW-w64，提供更多 API 支持和 64 位应用开发，因此建议抛弃 MSYS 直接使用 MSYS2
-### MSYS2详细说明
+## MSYS2详细说明
 - MSYS2（​​Minimal SYStem 2​​）是专为Windows设计的​​类Unix开发环境与跨平台构建工具集​​，其核心目标是为开发者提供在Windows上编译原生应用及移植Unix/Linux程序的统一平台。它结合了Cygwin的POSIX兼容层、Arch Linux的Pacman包管理系统，以及MinGW-w64工具链，形成了功能强大的开发框架
 - MSYS2是一个集成了大量的GNU工具链、工具和库的开源软件包集合。它提供了一个类似于Linux的shell环境，可以在Windows系统中编译和运行许多Linux应用程序和工具
 - MSYS2与MinGW-w64相似，但比MinGW-w64更完整和稳定，提供了Pacman包管理器以方便用户安装和管理软件包。不需网上搜索安装包，下载安装。直接运用pacman进行下载，并且升级简单。
-#### 技术栈整合
+### 技术栈整合
 * Cygwin兼容层​​：提供Unix系统调用模拟，支持bash shell、GNU工具（如grep、sed）等，使Windows用户能运行Unix脚本。
 * MinGW-w64工具链​​：包含GCC编译器、GDB调试器等，支持生成原生32/64位Windows程序（.exe），无需依赖第三方动态库。
 * Pacman包管理器​​：移植自Arch Linux，管理超过3000个预编译软件包，支持依赖解析与一键更新
-#### 多工具链架构
+### 多工具链架构
 MSYS2维护六大核心仓库，适配不同开发需求：
 * ​传统仓库​​：
   * mingw32（32位MSVCRT运行时）、mingw64（64位MSVCRT运行时）。
@@ -56,29 +52,28 @@ MSYS2维护六大核心仓库，适配不同开发需求：
 - Arch Linux 包管理通过 pacman 管理软件包，可安装数千个预编译库（如GCC、Python、OpenSSL）。
 - 多环境支持，MSYS2 安装后提供多个终端入口，每个终端对应不同的开发环境和工具链，​核心区别在于目标平台、路径处理方式和运行时依赖。
   
-**用户可通过不同终端启动脚本切换开发环境：**
-##### MSYS​​
+### 用户可通过不同终端启动脚本切换开发环境
+#### MSYS​​
 ​​定位​​：基于 Cygwin 的 POSIX 兼容环境，主要用于移植 Unix/Linux 工具到 Windows。
 ​​编译特性​​：生成的程序依赖 MSYS2.dll，无法直接在原生 Windows 中独立运行。
 ​​适用场景​​：开发或运行需要 Unix 环境的工具（如 autoconf、git）。
-##### MINGW32​​
+#### MINGW32​​
 ​​定位​​：32 位 Windows 原生开发环境。
 ​​工具链​​：GCC 编译器 + MSVCRT 运行时（旧版 Windows 兼容）。
 ​​适用场景​​：维护传统 32 位项目或适配旧系统（如 Windows XP）。
-##### MINGW64​​
+#### MINGW64​​
 ​​定位​​：64 位 Windows 原生开发环境。
 ​​工具链​​：GCC 编译器 + MSVCRT 运行时。
 ​​适用场景​​：开发不依赖新特性的 64 位程序。
-##### UCRT64​​
+#### UCRT64​​
 ​​定位​​：现代 64 位 Windows 开发环境（推荐默认选择）。
 ​​工具链​​：GCC 编译器 + UCRT（Universal C Runtime），适配 Windows 10/11。
 ​​优势​​：支持 Unicode、最新 API 和高性能数学库。
-##### CLANG64​​
+#### CLANG64​​
 ​​定位​​：基于 LLVM/Clang 的 64 位开发环境。
 ​​工具链​​：Clang 编译器 + UCRT 运行时。
 ​​优势​​：支持 C++20/23 标准、静态分析工具（如 clang-tidy）。
-
-##### CLANGARM64​​
+#### CLANGARM64​​
 ​​定位​​：针对 ARM 架构设备（如智能手机）的 64 位开发环境。
 ​​工具链​​：Clang 编译器 + UCRT 运行时。
 ​​适用场景​​：跨平台开发或嵌入式系统适配
@@ -93,3 +88,6 @@ MSYS2维护六大核心仓库，适配不同开发需求：
 |UCRT64	|GCC|	UCRT	|x86_64|pacman -S mingw-w64-ucrt-x86_64-toolchain|	现代 Windows 原生程序开发|
 |CLANG64	|Clang	|UCRT|	x86_64|	pacman -S mingw-w64-clang-x86_64-toolchain|高性能优化与静态代码分析|
 |CLANGARM64|	Clang	|UCRT	|ARM64|pacman -S mingw-w64-clang-arm64-toolchain|	ARM 设备开发|
+
+## MSYS2语言支持情况 
+MSYS2 虽然以 C/C++ 开发为核心，但其通过灵活的包管理系统和跨平台环境设计，​​全面支持多种编程语言​​。
