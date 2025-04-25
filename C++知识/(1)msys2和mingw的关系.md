@@ -83,21 +83,13 @@ MSYS2维护六大核心仓库，适配不同开发需求：
 ​​工具链​​：Clang 编译器 + UCRT 运行时。
 ​​适用场景​​：跨平台开发或嵌入式系统适配
 
-**不同的终端对应不同的环境和不同的工具链**
+**不同的终端对应不同的环境和不同的工具链，安装工具链和库需要匹配对应的环境**
 
-| 环境名称​​	​| ​编译器​​	|​ ​运行时库 |​​	​​目标架构 |​​	 ​推荐场景 |​​
-|---|---|---|---|---|
-|MSYS	  |GCC	|Cygwin	|x86_64	|Unix |工具移植|
-MINGW32	GCC	MSVCRT	i686	32 位旧系统兼容
-MINGW64	GCC	MSVCRT	x86_64	64 位基础开发
-UCRT64	GCC	UCRT	x86_64	现代 Windows 原生程序开发
-CLANG64	Clang	UCRT	x86_64	高性能优化与静态代码分析
-CLANGARM64	Clang	UCRT	ARM64	ARM 设备开发
-
-运行 POSIX 命令（如 git、make）	     msys2.exe  
-编译 32 位 Windows 程序	            mingw32.exe  
-编译 64 位 Windows 程序	            mingw64.exe  
-编译 64 位 Windows 程序，使用 UCRT	 ucrt64.exe  
-使用 Clang 而不是 GCC	            clang64.exe  
-编写跨平台 POSIX 代码（类似 Cygwin）  msys2.exe  
-```
+| 环境名称 | 编译器 | 运行时库 | 目标架构| 工具链| 推荐场景       |
+|----------|--------|----------|----------|--------|----------------|
+| MSYS     | GCC    | Cygwin   | x86_64 | pacman -S base-devel（基础工具链） | Unix工具移植    |
+|MINGW32|	GCC	|MSVCRT	|i686|pacman -S mingw-w64-i686-toolchain|32 位旧系统兼容|
+|MINGW64|	GCC|	MSVCRT|	x86_64|	pacman -S mingw-w64-x86_64-toolchain|64 位基础开发|
+|UCRT64	|GCC|	UCRT	|x86_64|pacman -S mingw-w64-ucrt-x86_64-toolchain|	现代 Windows 原生程序开发|
+|CLANG64	|Clang	|UCRT|	x86_64|	pacman -S mingw-w64-clang-x86_64-toolchain|高性能优化与静态代码分析|
+|CLANGARM64|	Clang	|UCRT	|ARM64|pacman -S mingw-w64-clang-arm64-toolchain|	ARM 设备开发|
