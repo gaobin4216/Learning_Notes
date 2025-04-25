@@ -1,11 +1,15 @@
+# POSIX
+​可移植操作系统接口​​，Portable Operating System Interface，是​​由IEEE制定的标准族​​，旨在为不同UNIX操作系统提供统一的应用程序接口（API），确保软件能在兼容系统上无缝移植
+
 # Cygwin
-* Cygwin是一个支持在Windows平台上运行的Unix环境，它最早的版本于1995年10月发布。其目标是让Windows用户可以使用GNU和开源工具，如bash, gcc, less等。但是，Cygwin并不是一个支持运行原生Linux应用或者让Windows应用感知Unix功能的工具；它实际上是一个大型的GNU和开源工具集合，支持在windows上提供类似于Linux distribution 版本的功能（Linux_distribution的目标是让用户在不同的硬件平台上使用类似于Unix的功能和体验），允许用户在Windows系统上运行许多原本只能在Unix或Linux系统上运行的软件。
+* Cygwin 是运行在 Windows 平台上的类 UNIX 模拟环境，​​核心功能是为 Windows 提供 POSIX 兼容的 API 接口和丰富的 GNU 工具集​​，使开发者能够在 Windows 上编译、运行 UNIX/Linux 应用程序。
+* Cygwin 由动态链接库（DLL）和 GNU 工具链构成，通过模拟 UNIX 系统调用（如 fork、signal 等）实现与 POSIX 标准的兼容。它并非虚拟机，而是通过翻译层将 UNIX API 转换为 Windows API，使得原生 Windows 系统可直接运行 UNIX 程序。
+* Cygwin 通过动态链接库拦截 UNIX 系统调用（如文件操作、进程管理），将其转换为等效的 Windows API，例如：
+UNIX 的 fork() 调用 → Windows 的 CreateProcess() 实现多进程。
+文件路径 /home/user 映射为 Windows 的 C:\cygwin\home\user。
+* ​​POSIX 标准支持​​：覆盖 90% 以上的 UNIX 接口，但部分实时系统调用（如 mlock）可能受限。    
+* ​跨平台开发​​：允许开发者直接在 Windows 上编写和调试 Linux 兼容的代码，减少环境切换成本。
 
-Cygwin由两部分组成：
-
-* 一个C标准库形式的动态链接库(DLL，dynamic-link library)，作为POSIX API的兼容层。
-* 一个提供类似unix外观和操作感觉的被广泛使用的软件工具和应用程序集合。
-  
 **Cygwin是由一个库和一个GNU开发工具链组成的；这个库实现了POSIX系统调用API的功能，它可以把部分POSIX调用转换成Windows系统调用（POSIX为不同Unix系统提供统一的API（应用程序接口）），从而支持用户在Windows平台上可以运行大量与Unix系统类似的应用程序；而这个GNU开发工具链（包括GCC和GDB）则支持让用户进行软件开发。**
 
 # MinGW(Minimalist GNU for Windows)  
