@@ -11,12 +11,12 @@
 # STEP5：本地配置
 在git bash中：
 ```
-git config --global user.name "gaobin4216"        //用户名
-git config --global user.email gaobin4216@gmail.com //github的油箱
+git config --global user.name "gaobin4216"        //用户名，标识提交者的名字
+git config --global user.email gaobin4216@gmail.com //github的邮箱，标识提交者的邮箱
 git config --global --unset https.proxy   //取消代理
 git config --global --unset http.proxy
-git config --global http.proxy 127.0.0.1:7890    //设置，梯子的端口
-git config --global https.proxy 127.0.0.1:7890   //设置梯子的端口
+git config --global http.proxy 127.0.0.1:10080    //设置，梯子的端口
+git config --global https.proxy 127.0.0.1:10080   //设置梯子的端口
 ```
 # STEP6：使用
 1、git clone  
