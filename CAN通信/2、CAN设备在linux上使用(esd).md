@@ -39,3 +39,5 @@ cansend can0 607#238460000A000000
 cansend can0 607#23816000D0070000
 cansend can0 607#23FF6000E8030000
 ```
+
+## socketcan，可以直接使用C++发送sdo和pdo指令控制电机，将socket与can结合
