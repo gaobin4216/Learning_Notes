@@ -1,4 +1,4 @@
-# POSIX
+ POSIX
 ​可移植操作系统接口​​，Portable Operating System Interface，是​​由IEEE制定的标准族​​，旨在为不同UNIX操作系统提供统一的应用程序接口（API），确保软件能在兼容系统上无缝移植
 # Cygwin与MinGW区别
 ### Cygwin用于在Windows上模拟Unix环境并移植unix程序
@@ -33,6 +33,14 @@ UNIX 的 fork() 调用 → Windows 的 CreateProcess() 实现多进程。
 * MSYS (Minimal SYStem) 是一系列 GNU 工具（bash、make、gawk、grep等）的集合（基于旧版 Cygwin），用于弥补 Windows cmd shell 的不足，让 MinGW 在 Windows 上更便于使用。
 * MSYS2 是一个独立的 MSYS 重写（因为 MinGW 和 MSYS 更新缓慢），基于新一代 Cygwin 和 MinGW-w64，提供更多 API 支持和 64 位应用开发，因此建议抛弃 MSYS 直接使用 MSYS2
 ## MSYS2详细说明
+
+MinGW = Windows 上的 GCC，狭义理解g++.exe，编译出来的就是普通 .exe
+MSYS2 是带包管理器、带 shell 的 MinGW 增强版
+**pacman 只能在 MSYS 终端用，不能在 MinGW64 里用！MinGW64 只管编译，不管装包！pacman 是 MSYS2 系统级工具，依赖 MSYS 子系统的环境变量、路径、依赖库**
+MSYS 终端：系统环境，负责装包、更新、维护
+MinGW64 终端：编译环境，负责写代码、编译程序
+
+
 - MSYS2（​​Minimal SYStem 2​​）是专为Windows设计的​​类Unix开发环境与跨平台构建工具集​​，其核心目标是为开发者提供在Windows上编译原生应用及移植Unix/Linux程序的统一平台。它结合了Cygwin的POSIX兼容层、Arch Linux的Pacman包管理系统，以及MinGW-w64工具链，形成了功能强大的开发框架
 - MSYS2是一个集成了大量的GNU工具链、工具和库的开源软件包集合。它提供了一个类似于Linux的shell环境，可以在Windows系统中编译和运行许多Linux应用程序和工具
 - MSYS2与MinGW-w64相似，但比MinGW-w64更完整和稳定，提供了Pacman包管理器以方便用户安装和管理软件包。不需网上搜索安装包，下载安装。直接运用pacman进行下载，并且升级简单。
@@ -79,6 +87,14 @@ MSYS2维护六大核心仓库，适配不同开发需求：
 ​​适用场景​​：跨平台开发或嵌入式系统适配
 
 **不同的终端对应不同的环境和不同的工具链，安装工具链和库需要匹配对应的环境**
+每个环境完全独立
+装 mingw64 的包，不能在 ucrt64 用
+装 ucrt64 的包，不能在 clang64 用
+每个环境有自己的 bin、lib、include
+装包必须用对应前缀，**pacman 只能在 MSYS 终端用，不能在 MinGW64 里用！MinGW64 只管编译，不管装包！pacman 是 MSYS2 系统级工具，依赖 MSYS 子系统的环境变量、路径、依赖库**
+
+用哪个环境先安装工具链，不管是 mingw64 / ucrt64 / clang64，工具链里面装的都是一套完整的「编译 + 链接 + 调试 + 构建」全家桶。工具链 = 编译器 + 调试器 + 链接器 + 构建工具 + 系统库
+只要装了 toolchain，你就能直接写代码、编译、调试、生成 exe，不需要再装任何东西！
 
 | 环境名称 | 编译器 | 运行时库 | 目标架构| 工具链| 推荐场景       |
 |----------|--------|----------|----------|--------|----------------|
