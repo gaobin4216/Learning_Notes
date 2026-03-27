@@ -1,5 +1,30 @@
 [toc]
-
+**VS Code 编译 C++ 必须写那 3 个配置文件，是因为：VS Code 本身不会编译 C++，它只是个编辑器！那几个文件 = 你告诉 VS Code：怎么编译、怎么调试、用哪个头文件。CMake 项目 → 完全不需要那 3 个破文件！一行都不用写！**
+1. 为什么普通 C++ 要写 tasks.json/launch.json？
+因为：
+VS Code 不知道你用 g++ 还是 clang++
+VS Code 不知道编译命令怎么写
+VS Code 不知道调试用 gdb 还是 lldb
+VS Code 不知道你的 exe 生成在哪
+所以你必须写：
+tasks.json = 告诉 VS Code 编译命令
+launch.json = 告诉 VS Code 怎么调试
+c_cpp_properties.json = 告诉 VS Code 头文件在哪
+这是【手动模式】，麻烦、重复、容易错。
+2. CMake 为什么不需要这些文件？
+因为：
+**CMake 是【自动模式】！
+CMake 自己就是配置管理器！**
+CMake 会自动：
+找到你的编译器
+找到所有头文件
+找到所有库
+生成编译规则
+生成调试信息
+生成可执行文件
+VS Code 只要识别 CMake，就啥都不用配！
+3. 用 CMake，你只需要 1 个文件：
+CMakeLists.txt
 # 一、基础概念
 &emsp;&emsp;我们以gcc编译器为例来说，它可以编译很多种编程语言(括C、C++、Objective-C、Fortran、Java等等)，当你的程序只有一个源文件时，直接就可以用gcc命令编译它。
 ```cpp

@@ -87,14 +87,25 @@ MSYS2维护六大核心仓库，适配不同开发需求：
 ​​适用场景​​：跨平台开发或嵌入式系统适配
 
 **不同的终端对应不同的环境和不同的工具链，安装工具链和库需要匹配对应的环境**
+
+MSYS2 的多环境（mingw64/ucrt64/clang64）它们是完全独立的，互相隔离！
+
 每个环境完全独立
 装 mingw64 的包，不能在 ucrt64 用
 装 ucrt64 的包，不能在 clang64 用
 每个环境有自己的 bin、lib、include
+
 装包必须用对应前缀，**pacman 只能在 MSYS 终端用，不能在 MinGW64 里用！MinGW64 只管编译，不管装包！pacman 是 MSYS2 系统级工具，依赖 MSYS 子系统的环境变量、路径、依赖库**
 
 用哪个环境先安装工具链，不管是 mingw64 / ucrt64 / clang64，工具链里面装的都是一套完整的「编译 + 链接 + 调试 + 构建」全家桶。工具链 = 编译器 + 调试器 + 链接器 + 构建工具 + 系统库
 只要装了 toolchain，你就能直接写代码、编译、调试、生成 exe，不需要再装任何东西！
+
+
+VS Code 本身不知道你用的是 mingw64 /ucrt64 /clang64！
+它不会自动识别环境！
+环境切换 不是靠打开哪个终端，而是靠 2 个东西：
+1. 系统环境变量 PATH 里配的是哪个 bin 目录
+2. VS Code 配置里写死的路径（compilerPath /gdb 路径）
 
 | 环境名称 | 编译器 | 运行时库 | 目标架构| 工具链| 推荐场景       |
 |----------|--------|----------|----------|--------|----------------|
@@ -107,3 +118,29 @@ MSYS2维护六大核心仓库，适配不同开发需求：
 
 ## MSYS2语言支持情况 
 MSYS2 虽然以 C/C++ 开发为核心，但其通过灵活的包管理系统和跨平台环境设计，​​全面支持多种编程语言​​。
+
+# WSL
+WSL 就是在 Windows 里「直接跑一个真正的 Linux 系统」，不是虚拟机、不是模拟器，是内核级集成。
+1. WSL 到底是什么？
+微软官方做的 Linux 兼容层
+让你在 Windows 里直接运行 Linux 发行版（Ubuntu、Debian、Arch 等）
+里面是完整 Linux 文件系统 + 原生 Linux 程序
+可以用 apt / pacman / gcc / gdb / cmake
+编译出来的是 Linux 可执行文件，不是 Windows exe
+
+## WSL 和 MSYS2 到底有什么区别？（超级关键）
+👉 MSYS2
+在 Windows 上模拟 Linux 命令行
+本质还是 Windows 环境
+编译器生成 Windows exe
+用的是 Windows 内核
+👉 WSL
+真正的 Linux 环境（有完整 Linux 内核）
+编译器生成 Linux 程序
+可以跑 Linux 服务、Docker、各种 Linux 工具
+完全独立于 Windows
+
+#  三个的区别
+MinGW = 编译器（只负责把代码变成 exe）g++.exe，windows的gcc（GNU Compiler Collection）
+MSYS2 = Windows 上的类 Unix 环境 + MinGW 编译器和其他环境 +包管理器
+WSL = Windows 里跑真正的 Linux（生成 Linux 程序）
