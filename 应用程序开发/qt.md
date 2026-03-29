@@ -1,4 +1,4 @@
-**winsows开发时，环境变量中qt的mingw要比别的mingw靠前，不然exe无法找到合适的库使用**
+**winsows开发时，环境变量中添加qt的mingw，而且qt的mingw要比别的mingw靠前，不然exe无法找到合适的库使用**
 
 ## QT是啥
 
