@@ -1,4 +1,92 @@
-# 安装运行
+# Windows App sdk，Windows sdk，Winrt的区别和关系
+
+## 1、winrt
+***重点逻辑***：WinRT 不是 “翻译工具”，而是一套现代、跨语言的 Windows API 标准与组件模型 **，它本身是 Windows SDK 的核心部分。
+
+**C++/WinRT、C# 都是用自己的方式调用这套统一的 WinRT API，只是调用方式不一样。**
+
+**WinRT = 现代 Windows 的系统 API 标准**
+老的是 Win32，新的、跨语言、跨设备的是 WinRT，它是 Windows SDK 的一部分
+**WinRT 设计时就支持多语言**
+它本身就定义了：类型怎么表示函数怎么调用数据怎么传。所以C++、C#、Python、JS 都能直接用，不需要 “翻译成 Win32”。
+**C++ / C++/WinRT：直接调用**
+C++/WinRT 是头文件库，让 C++ 直接、原生调用 WinRT API，几乎没有额外层，效率很高。C++/WinRT 的本质：它不是运行时库，而是一套现代 C++ 语法投影层（Projection）。它的作用只有一个：把 Windows 运行时（WinRT）的 COM 接口，转换成干净、现代、类型安全的 C++ 代码。
+所有转换逻辑、智能指针、模板、包装类……全部在头文件里实现。
+**C#：通过 .NET 层调用**
+但不是 “二次翻译”.NET 自带了对 WinRT 的绑定 / 包装，C# 写的代码 → .NET 层 → 直接调用 WinRT，不是先翻译成 C++，再调用 WinRT，本质还是C# 直接用 WinRT API，只是走了.NET 的封装
+
+**WinRT 是 Windows 系统本身提供的原生 API 规范。
+C++/WinRT：直接用头文件映射，零封装、原生调用。
+C#：不能直接吃 WinRT ABI，所以 .NET 做了一层包装 / 投影（Projection），把 WinRT 转成 C# 熟悉的类、接口、异步方法。C# 调用的是 .NET 封装后的 WinRT，但底层还是同一套系统 API。**
+
+
+## windows sdk和app sdk
+* Windows SDK（系统 SDK）：系统自带、随 Windows 更新、提供底层 WinRT/Win32 API、绑定 OS 版本。
+* Windows App SDK（应用 SDK）：独立发布、NuGet 安装、在 Windows SDK 之上、提供统一现代 API（含 WinUI 3）、兼容 Win10 1809+/Win11、不绑定 OS 版本。
+
+### windows app sdk的逻辑
+1、它是 WinRT 的 “扩展集”，遵循 WinRT ABI / 元数据规范，不是新架构。把系统 WinRT 里分散 / 难用的能力，做成统一、易用的 API（如窗口管理、通知、启动）。自带WinUI 3（现代 UI 框架，替代 UWP XAML）。
+
+2、解耦 OS、独立更新
+不用等 Windows 大更，NuGet 直接更 App SDK，新功能马上用。1套代码兼容多版本 Windows（1809+）。
+
+3、语言调用和之前一样
+C#：.NET 做投影封装，直接调 App SDK 的 WinRT API。
+C++/WinRT：头文件直接调，几乎无开销。底层还是走系统 WinRT/Windows SDK
+
+**Windows App SDK = 基于 WinRT、独立于 OS、带 WinUI 3 的现代桌面统一 API 层，C#/.NET、C++/WinRT 调用逻辑不变，只是多了一层现代增强 API。**
+
+Windows App SDK 是一套基于 WinRT 规范、构建在系统 WinRT 之上的「现代增强型 API 库 + 框架集合」。
+你可以把它理解成三层关系：
+* 底层：系统 WinRT（Windows SDK 里的）
+系统自带，负责和内核打交道。
+* 上层：Windows App SDK
+复用、扩展系统 WinRT，提供更现代、更统一、更适合桌面的 API，自带 WinUI 3（现代 UI），独立更新，不绑死系统版本
+* 语言层
+C#：.NET 投影封装
+C++/WinRT：直接调用
+
+**WinRT 是接口标准 + 系统底层能力
+Windows App SDK 是基于这个标准做的一套 “超级功能库”
+它不是简单封装，而是扩展、增强、统一、现代化了 WinRT
+你用 C# 调用它，和调用系统 WinRT 的逻辑一模一样**
+
+### 关系图
+#### C#/.NET
+C# 代码
+   ↓（你写的代码）
+.NET 投影封装
+   ↓（.NET 自动生成：把 App SDK 转成 C# 类）
+Windows App SDK API（基于 WinRT 规范）
+   ↓（增强功能、WinUI3、统一桌面 API）
+系统 WinRT API（Windows SDK）
+   ↓（系统原生接口）
+Windows 系统底层
+
+***Windows App SDK 本身就是一套遵循 WinRT 规范的 API，
+所以 .NET 对它的处理方式，和对系统 WinRT 完全一样：
+自动生成一层 C# 包装，让你直接用。*** 
+
+
+*系统 WinRT = 电脑自带的基础接口。
+Windows App SDK = 在基础接口上做的高级功能套件。
+.NET 投影 = 一个万能翻译器。
+既能翻译系统 WinRT，也能翻译 Windows App SDK。*
+
+最终结论（你可以牢牢记住）
+✅ C# 不直接碰 WinRT / App SDK
+✅ .NET 负责把它们全部翻译成 C# 能看懂的代码
+✅ Windows App SDK 是增强库，.NET 照样给它套封装
+
+#### C++/WinRT
+C++/WinRT 代码
+   ↓（直接调用，无包装）
+Windows App SDK API
+   ↓（**App SDK 内部调用 / 封装了**）
+系统 WinRT API（Windows SDK）
+   ↓
+Windows 系统内核
+# WINUI3安装运行
 VS2022以上，安装C#和windows应用开发
 新建winui项目，安装调试成功后右键项目发布成exe
 
