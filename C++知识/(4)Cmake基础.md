@@ -1,4 +1,5 @@
 [toc]
+
 **VS Code 编译 C++ 必须写那 3 个配置文件，是因为：VS Code 本身不会编译 C++，它只是个编辑器！那几个文件 = 你告诉 VS Code：怎么编译、怎么调试、用哪个头文件。CMake 项目 → 完全不需要那 3 个破文件！一行都不用写！**
 1. 为什么普通 C++ 要写 tasks.json/launch.json？
 因为：
@@ -25,6 +26,20 @@ CMake 会自动：
 VS Code 只要识别 CMake，就啥都不用配！
 3. 用 CMake，你只需要 1 个文件：
 CMakeLists.txt
+
+# Cmake简介
+
+**CMake 支持多种构建后端，Make 只是其中一种默认选项。你可以把 CMake 理解成一个跨平台的 “生成器”**
+
+- 生成 Makefile → 给 Make 用
+- 生成 build.ninja → 给 Ninja 用
+- 生成 Visual Studio 工程
+- 生成 Xcode 工程
+- 生成 CLion 工程
+
+**CMake 只管生成构建文件，不管执行！CMake 是 “总设计师”，Make、Ninja、VS 工程都是 “不同的施工队”，它们干的活一模一样（编译代码），只是干活的方式和工具不同。**
+
+
 # 一、基础概念
 &emsp;&emsp;我们以gcc编译器为例来说，它可以编译很多种编程语言(括C、C++、Objective-C、Fortran、Java等等)，当你的程序只有一个源文件时，直接就可以用gcc命令编译它。
 ```cpp
