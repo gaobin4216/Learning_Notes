@@ -4,6 +4,8 @@
 
 **他妈的，为什么不直接叫Windows App UI，这样就和windows app sdk一致了，也好理解一个UI库，一个SDK工具集合，SDK中包含这个UI，真傻逼，就把WinUI3当成Windows App UI就行。**
 
+WinUI 3 不是纯 Win32。它依赖 Windows App SDK、WinRT、XAML 框架等运行时。
+
 ---
 
 ## 介绍
@@ -46,10 +48,29 @@ WinRT 是理解 Windows 现代开发的基础，先搞懂它，后面的 Windows
 - Win32：传统桌面 API，最底层、最强大、兼容性最好
 - WinRT：现代系统 API，更安全、更现代、跨语言、沙箱友好
 
+同一套 Windows 生态里的两层/两类 API。
+不是二选一：WinUI 3 桌面应用通常同时用 Win32 和 WinRT。
+
 **Windows SDK 包含两大部分：**
 - 传统 Win32 部分：C 风格函数（CreateWindow、WriteFile 等），头文件：windows.h 等
 - 现代 WinRT 部分：面向对象 API（Windows.Storage、Windows.UI 等），元数据：.winmd，语言投影：C++/WinRT、C#/WinRT 等
-
+ 
+Windows SDK
+├─ Win32 API
+│  ├─ 传统桌面程序核心
+│  ├─ HWND、消息循环、进程、线程、文件、注册表
+│  └─ C/C++ 风格 API，历史最久，能力最全
+│
+├─ WinRT API
+│  ├─ 现代 Windows Runtime API
+│  ├─ 通知、设备、蓝牙、应用生命周期、现代权限
+│  └─ 可被 C++、C#、JS 等语言投影调用
+│
+└─ 其他工具和头文件
+   ├─ 编译/链接支持
+   ├─ Manifest、资源、调试工具
+   └─ 系统库、IDL、元数据等
+   
 **核心目标**：让同一套 API 可被 C++/WinRT、C#、VB.NET、JavaScript/TypeScript、Rust、Python 等多种语言调用，实现跨设备、跨架构（x86/x64/ARM）的应用开发。
 
 API 定义存储在 .winmd（Windows Metadata）文件中，类似 .NET 元数据，支持跨语言无缝调用。不同语言通过各自投影（Projection）访问同一套 WinRT API，行为一致。
