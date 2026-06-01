@@ -1,196 +1,337 @@
-[toc]
+# 构建工具与 CMake
 
-**VS Code 编译 C++ 必须写那 3 个配置文件，是因为：VS Code 本身不会编译 C++，它只是个编辑器！那几个文件 = 你告诉 VS Code：怎么编译、怎么调试、用哪个头文件。CMake 项目 → 完全不需要那 3 个破文件！一行都不用写！**
-1. 为什么普通 C++ 要写 tasks.json/launch.json？
-因为：
-VS Code 不知道你用 g++ 还是 clang++
-VS Code 不知道编译命令怎么写
-VS Code 不知道调试用 gdb 还是 lldb
-VS Code 不知道你的 exe 生成在哪
-所以你必须写：
-tasks.json = 告诉 VS Code 编译命令
-launch.json = 告诉 VS Code 怎么调试
-c_cpp_properties.json = 告诉 VS Code 头文件在哪
-这是【手动模式】，麻烦、重复、容易错。
-2. CMake 为什么不需要这些文件？
-因为：
-**CMake 是【自动模式】！
-CMake 自己就是配置管理器！**
-CMake 会自动：
-找到你的编译器
-找到所有头文件
-找到所有库
-生成编译规则
-生成调试信息
-生成可执行文件
-VS Code 只要识别 CMake，就啥都不用配！
-3. 用 CMake，你只需要 1 个文件：
-CMakeLists.txt
+## 一、构建工具生态总览
 
-# Cmake简介
+### 为什么要分三层
 
-**CMake 支持多种构建后端，Make 只是其中一种默认选项。你可以把 CMake 理解成一个跨平台的 “生成器”**
+编译一个 C++ 程序，需要解决三个不同的问题：
 
-- 生成 Makefile → 给 Make 用
-- 生成 build.ninja → 给 Ninja 用
-- 生成 Visual Studio 工程
-- 生成 Xcode 工程
-- 生成 CLion 工程
+| 问题 | 谁来解决 | 举例 |
+|------|----------|------|
+| **怎么翻译代码？** | 编译器 | GCC、Clang、MSVC |
+| **怎么管理多文件的编译顺序和依赖？** | 构建系统 | Make、Ninja、MSBuild |
+| **怎么在不同平台上生成统一的构建规则？** | 构建系统生成器 | CMake、Meson、Autotools |
 
-**CMake 只管生成构建文件，不管执行！CMake 是 “总设计师”，Make、Ninja、VS 工程都是 “不同的施工队”，它们干的活一模一样（编译代码），只是干活的方式和工具不同。**
+### 三层架构
 
-
-# 一、基础概念
-&emsp;&emsp;我们以gcc编译器为例来说，它可以编译很多种编程语言(括C、C++、Objective-C、Fortran、Java等等)，当你的程序只有一个源文件时，直接就可以用gcc命令编译它。
-```cpp
-gcc hello.c -o hello_world
 ```
-&emsp;&emsp;但是当你的程序包含很多个源文件时，用gcc命令逐个去编译时，你就很容易混乱而且工作量大。因此make工具就很有必要。
-## 1、Makefile
-&emsp;&emsp;Makefile 文件描述了整个工程的编译、连接等规则。其中包括：工程中的哪些源文件需要编译以及如何编译、需要创建那些中间文件以及如何创建这些中间文件、如何最后产生我们想要得可执行文件。尽管看起来可能是很复杂的事情，但是为工程编写 Makefile 的好处是能够使用一行命令来完成“自动化编译”，一旦提供了正确的 Makefile，编译整个工程你所要做的唯一的一件事就是输入 make 命令。整个工程完全自动编译，极大提高了效率。makefile命令中就包含了调用gcc（也可以是别的编译器）去编译某个源文件的命令。
-## 2、make工具
-&emsp;&emsp;make工具可以看成是一个智能的批处理工具，它本身并没有编译和链接的功能，而是用类似于批处理的方式通过调用makefile文件中用户指定的命令来进行编译和链接的。  
-&emsp;&emsp;make 是一个命令工具，它解释Makefile中的规则。在Makefile文件中描述了整个工程所有文件的编译顺序、编译规则。Makefile有自己的书写格式、关键字、函数。而且在Makefile中可以使用系统shell所提供的任何命令来完成想要的工作。Makefile在绝大多数的IDE开发环境中都在使用，已经成为一种工程的编译方法。       
-&emsp;&emsp;当对工程中的若干源文件修改以后，只需要重新执行 make 命令，就会自动根据修改情况完成源文件的对应目标文件的更新、中间文件的更新、最终的可执行程序的更新。make 通过比较对应文件的最后修改时间，来决定哪些文件需要更新、那些文件不需要更新。对需要更新的文件 make 就执行相应的命令来重建它，对于不需要重建的文件 make 什么也不做。
-方法。
->&emsp;&emsp;**简单来说，make工具是用来执行Makefile的，Makefile是类unix环境下(比如Linux)的类似于批处理的"脚本"文件。其基本语法是: 目标+依赖+命令，只有在目标文件不存在，或目标比依赖的文件更旧，命令才会被执行。由此可见，Makefile和make可适用于任意工作，不限于编程。比如，可以用来管理latex。**
-
-## 3、CMake
-### 3.1、why？
-* makefile在一些简单的工程完全可以人工拿下，但是当工程非常大的时候，手写makefile也是非常麻烦的。
-* 如果换了个平台makefile重新修改。因为软件想跨平台，必须要保证能够在不同平台编译，就得为每一种平台标准重新写一次Makefile。各个平台都有自己的Make工具，例如GNU Make，QT的qmake，微软的MS nmake，BSD Make(pmake)，Makepp等等。
-
->**cmake可以更加简单的生成makefile文件给make用。也可以跨平台生成对应平台能用的makefile。**
-
-### 3.2、简介
-&emsp;&emsp;CMake是一个跨平台的安装(编译)工具，可以用简单的语句来描述所有平台的安装(编译过程)。他能够输出各种各样的makefile或者project文件，能测试编译器所支持的C++特性,类似UNIX下的automake。只是CMake的组态档取名为CMakeLists.txt。Cmake并不直接建构出最终的软件，而是产生标准的建构档(如 Unix 的 Makefile 或 Windows Visual C++ 的projects/workspaces)，然后再依一般的建构方式使用。这使得熟悉某个集成开发环境(IDE)的开发者可以用标准的方式建构他的软件，这种可以使用各平台的原生建构系统的能力是 CMake 和 SCons 等其他类似系统的区别之处。  
-&emsp;&emsp;CMake首先允许开发者编写一种平台无关的 CMakeList.txt文件来定制整个编译流程，然后再根据目标用户的平台进一步生成所需的本地化Makefile和工程文件，如Unix的Makefile或Windows的Visual Studio工程。从而做到“Write once, run everywhere”。显然，CMake是一个比上述几种make更高级的编译配置工具。工作过程如下：
-<div align=center>
-
-![请添加图片描述](https://i-blog.csdnimg.cn/blog_migrate/c21f472971e34676a84b70d37ee4fe1d.png)</div>
-
-cmake 的特点主要有：
->* 开放源代码，使用类 BSD 许可发布。http://cmake.org/HTML/Copyright.html
->* 跨平台，并可生成 native 编译配置文件，在 Linux/Unix 平台，生成 makefile，在苹果平台，可以生成 xcode，在 Windows 平台，可以生成 MSVC 的工程文件。
->* 能够管理大型项目，KDE4 就是最好的证明。
->* 简化编译构建过程和编译过程。Cmake 的工具链非常简单：cmake+make。
->* 高效虑，按照 KDE 官方说法，CMake 构建 KDE4 的 kdelibs 要比使用 autotools 来构建 KDE3.5.6 的 kdelibs 快 40%，主要是因为 Cmake 在工具链中没有 libtool
->* 可扩展，可以为 cmake 编写特定功能的模块，扩充 cmake 功能。
-# 二、CMake应用学习
-## 1、Window下安装及使用
-### (1)CMake安装
-* 从[CMake官网](https://cmake.org/download/)下载对应的安装包，如果系统是64位就选择x86_64，如果是32位就选择i386。
-<div align=center>
-
-![请添加图片描述](https://i-blog.csdnimg.cn/blog_migrate/b7083d9f77ddf523c2fbba2afda42ab1.png)
-
-
-</div>
-
-* 安装CMake，建议英文路径，同时勾选添加环境变量。
-<div align=center>
-
-![请添加图片描述](https://i-blog.csdnimg.cn/blog_migrate/1f885fae61bd38e85e21738fba46ad5e.png)
-
-
-</div>
-
-勾选之后就不需手动再添加环境变量了。如果不放心，可以在电脑高级系统设置->环境变量->path中查看是否已添加。
-<div align=center>
-
-![请添加图片描述](https://i-blog.csdnimg.cn/blog_migrate/c745e93a957a412e02aa4ec10d7440c2.png)
-
-
-</div>
-
-* 检查安装
-win+R，输入cmd回车，打开管理员窗口，输入cmake -version查看安装情况。
-
-<div align=center>
-
-![请添加图片描述](https://i-blog.csdnimg.cn/blog_migrate/817e5f67812974fb4d98090f62da2a5a.png)
-</div>
-
-### (2)CMake命令行运行示例
-* 首先安装C++编译器，例如mingw，或者安装Visual Studio,VS会自带MSVC编译器。这里我们选择安装Visual Studio 2017。
-* 桌面新建一个文件夹HelloCMake，在文件夹内新建一个Hello CMake.cpp，作用是在控制台输出HelloCMake，同时在cpp同目录新建一个CMakeLists.txt文件。
-
-HelloCMake.cpp内容：
-```cpp
-#include <iostream>
-int main() 
-{
-  std::cout << "HelloCMake" << std::endl;
-  system("pause");
-  return 0;
-}
+┌─────────────────────────────────────────────────────────────┐
+│  第一层：构建系统生成器（生成规则文件）                        │
+│    CMake、Meson、Autotools、qmake、Premake                   │
+│    输入：CMakeLists.txt / meson.build / configure.ac          │
+│    输出：Makefile / build.ninja / .sln                        │
+├─────────────────────────────────────────────────────────────┤
+│  第二层：构建系统（读取规则，调度编译）                        │
+│    Make、Ninja、MSBuild、nmake、Bazel                         │
+│    输入：Makefile / build.ninja / .sln                        │
+│    输出：调用编译器命令，生成 .o/.obj，再链接为可执行文件       │
+├─────────────────────────────────────────────────────────────┤
+│  第三层：编译器（实际翻译代码）                                │
+│    GCC、Clang、MSVC (cl.exe)                                  │
+│    输入：.cpp 源文件                                          │
+│    输出：.o/.obj 目标文件 → 链接 → .exe/.so/.a                │
+└─────────────────────────────────────────────────────────────┘
 ```
-CMakeLists.txt内容：
-```cpp
-cmake_minimum_required (VERSION 3.18)
-project (HelloCMake)
-add_executable (HelloCMake HelloCMake.cpp)
+
+### 一条完整的构建链路
+
+以"用 CMake + Make + GCC 在 Linux 上编译一个多文件项目"为例：
+
 ```
-* 在文件夹内打开cmd窗口，输入
-```cpp
-cmake .
+开发者写的文件：
+  CMakeLists.txt（告诉 CMake 有哪些源文件、要生成什么）
+  main.cpp、utils.cpp
+
+第一步：CMake 读取 CMakeLists.txt，生成 Makefile
+  $ cmake ..
+  -- Configuring done
+  -- Generating done
+  -- Build files written to: /project/build/Makefile    ← 生成了 Makefile
+
+第二步：Make 读取 Makefile，按规则调用 GCC
+  $ make
+  /usr/bin/g++ -c main.cpp -o main.o                    ← Make 调用 GCC 编译
+  /usr/bin/g++ -c utils.cpp -o utils.o                   ← Make 调用 GCC 编译
+  /usr/bin/g++ main.o utils.o -o MyApp                   ← Make 调用 GCC 链接
+
+第三步：运行
+  $ ./MyApp
 ```
-CMake会自己找到VS的c++编译器，生成vs项目；(红框为我们自己写的内容)
-<div align=center>
 
-![请添加图片描述](https://i-blog.csdnimg.cn/blog_migrate/0796aee6ebec6aa89507c9ff625d17b3.png)
+**再看 Windows 上用 CMake + MSBuild + MSVC 的同一条路**：
 
-
-</div>
-
-* 现在使用VS打开sln解决方案文件，就可以编译、运行、调试，由于项目中还存在其他的解决方案，需将HelloWorld解决方案设为“启动项”之后才能进行调试。
-<div align=center>
-
-![请添加图片描述](https://i-blog.csdnimg.cn/blog_migrate/df6e6ca5f5fc2c4669d06d41f164acf7.png)
-
-</div>
-
-* CMake在生成项目后，接下来就是编译工程(默认Debug模式)，在文件夹cmd直接输入
-```cpp
-cmake --bulid .
 ```
-如果用Release模式编译，在文件夹cmd直接输入
-```cpp
-cmake --build . -- /p:Configuration=Release
+$ cmake ..                                     ← CMake 生成 .sln/.vcxproj
+$ cmake --build .                              ← 底层调用 MSBuild
+  MSBuild.exe MyApp.sln /p:Configuration=Release  ← MSBuild 调用 cl.exe 编译
+  cl.exe /c main.cpp /Fo main.obj                ← MSVC 编译
+  cl.exe /c utils.cpp /Fo utils.obj
+  link.exe main.obj utils.obj /OUT:MyApp.exe     ← MSVC 链接
 ```
-<div align=center>
 
-![请添加图片描述](https://i-blog.csdnimg.cn/blog_migrate/25dbd96c2bb320a7c8ad327cb6b62e3e.png)
+**同源码、同 CMakeLists.txt，只是生成器不同，就适配了不同平台。** 这就是三层架构的价值。
 
-</div>
+### 各层工具速查
 
-红框的两个文件夹中就是不同模式生成的可执行文件.exe,可以直接双击运行。
+| 层级 | 工具 | 定位 | 平台 |
+|------|------|------|------|
+| **编译器** | GCC | GNU 编译器，Linux 标准 | Linux/macOS/Windows(MSYS2) |
+| | Clang | LLVM 前端，错误信息友好 | 全平台 |
+| | MSVC (cl.exe) | 微软编译器，Windows 原生 | Windows |
+| **构建系统** | GNU Make | Unix 标准，读 Makefile | Linux/macOS/Windows(MSYS2) |
+| | Ninja | 极速构建，由生成器产生 | 全平台 |
+| | MSBuild | VS 底层引擎，读 .sln | Windows |
+| | nmake | 微软的 make，读 makefile | Windows |
+| **生成器** | CMake | 行业标准，跨平台首选 | 全平台 |
+| | Meson | 语法简洁，生成 Ninja | 全平台 |
+| | Autotools | GNU 传统，生成 Makefile | Linux/macOS |
+| | qmake | Qt 专用 | 全平台 |
 
-### (3)CMake-GUI运行示例
-* 在桌面新建一个文件夹HelloCMake，在文件夹内新建一个Hello CMake.cpp，作用是在控制台输出HelloCMake，同时在cpp同目录新建一个CMakeLists.txt文件，最后在文件夹内新建一个bulid文件夹用来放生成文件。
-<div align=center>
+---
 
-![请添加图片描述](https://i-blog.csdnimg.cn/blog_migrate/53df13c78fa744811f75d32c5661cc4a.png)
+## 二、构建系统
 
-</div>
+### 1. GNU Make
 
-* 以下步骤依次进行
-<div align=center>   
+Unix/Linux 下的标准构建工具，读取 Makefile 执行编译规则。
 
-![请添加图片描述](https://i-blog.csdnimg.cn/blog_migrate/c2665d73437d4cd4fdf0be6c0b85aaa5.png)
-![请添加图片描述](https://i-blog.csdnimg.cn/blog_migrate/20a31a0de8081ec0052a5ad4680bd9d0.png)
+Makefile 基本语法：**目标 + 依赖 + 命令**
 
-</div>
-点击Generate生成VS项目，打开解决方案就可以编译运行。
-<div align=center>   
+```makefile
+# 目标: 依赖
+#     命令（必须以 Tab 开头）
+hello: hello.c
+	gcc hello.c -o hello
 
-![请添加图片描述](https://i-blog.csdnimg.cn/blog_migrate/3d1c470cd365d9f3c0a68b753ec64993.png)
+clean:
+	rm -f hello
+```
 
-</div>
-生成的解决方案中有三个项目，这三个项目分别是：
+特点：
+- 通过比较文件修改时间决定是否重新编译（增量构建）
+- Linux/macOS 默认自带，Windows 需通过 MSYS2/MinGW 安装
+- 命令：`make`（构建）、`make clean`（清理）
 
-> **ALL_BUILD：**  该目标会导致工程中所有项目被构建，类似 Visual Studio的Build All或者make的make all命令
-> **HelloWorld：** 项目本身，就是在CMakeLists.txt文件中配置的project(HelloWorld)
-> **ZERO_CHECK：** 该项目会检查生成工程的 CMake 配置文件(CMakeLists.txt)是否更新，如更新将运行 CMake 重新生成工程文件，如果确信 CMakeLists.txt 不会被更新，或者希望手工运行 CMake 重新生成工程文件，可以在 CMakeLists.txt 配置文件中添加 set(CMAKE_SUPPRESS_REGENERATION FALSE) 命令， ZERO_CHECK 目标将不会生成
-## 2、Linux下安装及使用
-***暂时没有用到Linux，以后用到再更！***
+### 2. Ninja
+
+Google 开发的轻量级构建系统，设计目标是**极致的构建速度**。
+
+| 对比 | Make | Ninja |
+|------|------|-------|
+| **定位** | 通用构建工具 | 专注于速度的构建工具 |
+| **Makefile** | 手写可读 | 不建议手写（由生成器产生） |
+| **并行构建** | `make -j4` | 默认并行 |
+| **增量构建** | 基于时间戳 | 基于时间戳 + 内容哈希 |
+| **使用场景** | 直接使用 | CMake/Meson 的后端 |
+
+```bash
+# CMake 生成 Ninja 构建文件
+cmake -G Ninja ..
+# 执行构建
+ninja
+```
+
+### 3. MSBuild
+
+微软的构建平台，Visual Studio 的底层构建引擎。
+
+- 项目文件格式：`.sln`（解决方案）、`.vcxproj`（C++ 项目）、`.csproj`（C# 项目）
+- 在 VS 中点击"生成"时，实际就是调用 MSBuild
+- 也可以命令行使用：`msbuild MyProject.sln /p:Configuration=Release`
+
+```powershell
+# 命令行构建
+msbuild MyProject.sln /p:Configuration=Release /p:Platform=x64
+
+# 或通过 CMake 生成 VS 工程后构建
+cmake --build . --config Release
+```
+
+### 4. 其他构建系统
+
+| 构建系统 | 说明 |
+|----------|------|
+| **nmake** | 微软的 make 实现，语法类似 GNU Make，随 VS 安装 |
+| **qmake** | Qt 框架的构建工具，生成 Makefile 或 VS 工程 |
+| **Bazel** | Google 开源，适合超大型项目（单体仓库），支持多语言 |
+| **SCons** | Python 编写的构建系统，用 Python 脚本替代 Makefile |
+| **Meson** | 高速构建系统，生成 Ninja 文件，语法简洁 |
+
+---
+
+## 三、构建系统生成器
+
+### 1. CMake
+
+CMake 是跨平台的构建系统生成器，它本身不编译代码，而是根据 CMakeLists.txt 生成构建文件。
+
+**CMake 的角色**："总设计师"——生成蓝图，施工队（Make、Ninja、MSBuild）按蓝图干活。
+
+| CMake 生成器（-G） | 生成的文件 | 交给谁用 |
+|---------------------|-----------|----------|
+| `"Unix Makefiles"` | Makefile | GNU Make |
+| `Ninja` | build.ninja | Ninja |
+| `"Visual Studio 17 2022"` | .sln / .vcxproj | MSBuild / VS |
+| `"Xcode"` | .xcodeproj | Xcode |
+| `"MinGW Makefiles"` | Makefile | MinGW Make |
+
+```bash
+# 默认生成器（Linux 下是 Make，Windows + VS 下是 VS 工程）
+cmake ..
+
+# 指定生成器
+cmake -G Ninja ..
+cmake -G "MinGW Makefiles" ..
+cmake -G "Visual Studio 17 2022" -A x64 ..
+```
+
+**CMake 不需要 VS Code 的 tasks.json/launch.json**：CMake 自动找到编译器、头文件、库，生成编译规则。VS Code 只要安装 CMake Tools 插件，识别 CMakeLists.txt 即可。
+
+### 2. Meson
+
+新兴的构建系统生成器，语法比 CMake 更简洁，生成 Ninja 文件。
+
+```meson
+# meson.build
+project('hello', 'c')
+executable('hello', 'main.c')
+```
+
+```bash
+meson setup build
+cd build
+ninja
+```
+
+### 3. Autotools（autoconf + automake）
+
+GNU 传统的构建系统生成器，生成 Makefile。配置复杂但历史悠久，许多老牌开源项目使用。
+
+```bash
+./configure
+make
+make install
+```
+
+### 4. 生成器对比
+
+| 生成器 | 配置语言 | 生成目标 | 学习曲线 | 适用场景 |
+|--------|----------|----------|----------|----------|
+| **CMake** | CMakeLists.txt | Make/Ninja/VS/Xcode | 中等 | 行业标准，跨平台首选 |
+| **Meson** | meson.build | Ninja | 低 | 新项目，追求简洁 |
+| **Autotools** | configure.ac + Makefile.am | Make | 高 | 老牌 GNU 项目 |
+| **qmake** | .pro 文件 | Make/VS | 低 | Qt 项目专用 |
+| **Premake** | premake5.lua | VS/Xcode/gmake | 低 | 游戏开发常用 |
+
+---
+
+## 四、编译器
+
+| 编译器 | 前端 | 后端 | 平台 | 说明 |
+|--------|------|------|------|------|
+| **GCC** | 自有 | 自有 | Linux/macOS/Windows(MSYS2) | GNU 编译器集，支持 C/C++/Fortran 等 |
+| **Clang** | 自有 | LLVM | 全平台 | 由苹果赞助，编译速度快，错误信息友好 |
+| **MSVC (cl.exe)** | 自有 | 自有 | Windows | Visual Studio 自带，Windows 原生支持最好 |
+| **MinGW GCC** | GCC | GCC | Windows | GCC 的 Windows 移植版 |
+
+### 编译器前端/后端架构
+
+```
+源代码 → [前端：词法分析、语法分析、生成 AST] → 中间表示(IR) → [后端：优化、生成机器码] → 目标文件
+```
+
+LLVM 的设计允许不同语言前端（Clang、Rust、Swift）共享同一个后端，实现"一次优化，多语言受益"。
+
+---
+
+## 五、CMake 使用
+
+### 1. 安装
+
+从 [CMake 官网](https://cmake.org/download/) 下载安装包（64 位选 x86_64），安装时勾选"Add CMake to the system PATH"。
+
+```bash
+cmake --version
+```
+
+### 2. 命令行使用
+
+以一个简单的 HelloCMake 项目为例：
+
+```
+HelloCMake/
+├── CMakeLists.txt
+└── HelloCMake.cpp
+```
+
+CMakeLists.txt：
+
+```cmake
+cmake_minimum_required(VERSION 3.18)
+project(HelloCMake)
+add_executable(HelloCMake HelloCMake.cpp)
+```
+
+**生成 + 编译**：
+
+```bash
+mkdir build && cd build
+cmake ..                    # 生成构建文件
+cmake --build .             # 编译（默认 Debug）
+cmake --build . --config Release   # 编译（Release）
+```
+
+### 3. CMake-GUI 使用
+
+1. 打开 CMake-GUI，设置源码目录和构建目录（建议单独建 `build` 文件夹）
+2. 点击 Configure，选择编译器和生成器
+3. 点击 Generate，生成构建文件
+4. 点击 Open Project，用 VS 打开编译
+
+### 4. 常用 CMake 变量
+
+```bash
+# 指定生成器
+cmake -G "Ninja" ..
+
+# 指定编译器
+cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ ..
+
+# 指定构建类型
+cmake -DCMAKE_BUILD_TYPE=Release ..
+
+# 指定安装路径
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..
+```
+
+---
+
+## 六、CMakeLists.txt 基础语法
+
+```cmake
+# 指定最低版本
+cmake_minimum_required(VERSION 3.18)
+
+# 定义项目名和支持的语言
+project(MyApp LANGUAGES CXX)
+
+# 设置 C++ 标准
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# 添加可执行目标
+add_executable(MyApp main.cpp utils.cpp parser.cpp)
+
+# 添加静态库
+add_library(mylib STATIC lib.cpp)
+
+# 链接库
+target_link_libraries(MyApp mylib)
+
+# 添加头文件搜索路径
+target_include_directories(MyApp PRIVATE include)
+
+# 查找并链接第三方库
+find_package(OpenCV REQUIRED)
+target_link_libraries(MyApp ${OpenCV_LIBS})
+```

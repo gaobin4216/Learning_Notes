@@ -1,4 +1,4 @@
-# 操作系统、GNU、CPU 架构与编译器
+# 操作系统、编译器与 CPU 架构基础
 
 ## 一、操作系统
 
@@ -143,7 +143,7 @@ PowerPC 是 IBM、Apple、Motorola 三家公司于 1990 年代开发的 RISC 架
 | 工具 | 定位 | 详见 |
 |------|------|------|
 | **IDE**（VS、CodeBlocks 等） | 集成编译器、调试器、项目管理于一体 | — |
-| **Cygwin** | Windows 上模拟 Unix 环境 | → (1) Windows 开发环境 |
-| **MinGW** | Windows 上的 GCC 编译环境 | → (1) Windows 开发环境 |
-| **MSYS2** | MinGW + Unix 工具 + 包管理器 | → (1) Windows 开发环境 |
-| **WSL** | Windows 里的真正 Linux 系统 | → (1) Windows 开发环境 |
+| **Cygwin** | Windows 上模拟 Unix 环境 | → (2) Windows 开发环境 |
+| **MinGW** | Windows 上的 GCC 编译环境 | → (2) Windows 开发环境 |
+| **MSYS2** | MinGW + Unix 工具 + 包管理器 | → (2) Windows 开发环境 |
+| **WSL** | Windows 里的真正 Linux 系统 | → (2) Windows 开发环境 |
