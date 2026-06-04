@@ -4,8 +4,7 @@
 
 ## 目录
 
-### 大模型基础
-
 | 编号 | 文件 | 内容 |
 |------|------|------|
-| 1. | 基础概念 | Token、Context、Prompt、Tool、MCP、Agent、Harness 等核心概念，以及 Cursor/Copilot/Claude Code 等 AI 编程工具对比 |
+| 1. | 大模型基础概念 | Token、Context、Prompt、Tool、MCP、Agent、Harness 等核心概念，以及概念间的关系 |
+| 2. | AI编程工具 | Cursor、GitHub Copilot、CC Switch、Claude Code、Codex 等工具对比与使用 |

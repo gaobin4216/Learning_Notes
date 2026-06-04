@@ -10,3 +10,4 @@ Git、Markdown 等开发工具的使用指南与杂项笔记。
 | (2) | Windows上Git与GitHub配置 | Windows上Git安装与GitHub配置 |
 | (3) | Markdown编辑指南 | Markdown语法速查、编辑器推荐 |
 | (4) | PT站使用笔记 | 北邮人PT站访问与使用 |
+| (5) | Vim编辑指南 | Vim模式、移动、编辑、查找替换、分屏、配置 |
