@@ -22,10 +22,18 @@ gaobin4216 的个人学习笔记
 │   └── (6) WinUI3与Windows现代开发
 │
 ├── ROS机器人开发/            ROS/MoveIt! 与机器人控制
-│   ├── 1. ROS基础
-│   ├── 2. MoveIt!学习
-│   ├── 3. ROS控制系统设计方法
-│   └── 4. ROS2
+│   ├── ROS1与ROS2对比.md
+│   ├── ROS1/
+│   │   ├── 01-ROS基础入门与环境搭建
+│   │   ├── 02-ROS通信机制
+│   │   ├── 03-机器人建模与URDF
+│   │   ├── 04-ros_control与MoveIt通信架构
+│   │   └── 05-MoveIt驱动Gazebo与真实机械臂
+│   └── ROS2/
+│       ├── 01-ROS2概述与环境搭建
+│       ├── 02-ROS2开发工具
+│       ├── 03-ROS2通信机制
+│       └── 04-ROS2机械臂控制
 │
 ├── CAN与CANopen/             CAN总线与CANopen协议
 │   ├── 1. CAN(CANopen)通信基础
@@ -36,5 +44,7 @@ gaobin4216 的个人学习笔记
 │
 ├── Git/                      Git 与 GitHub 使用
 │
-└── 大模型/                   大语言模型基础概念
+├── 大模型/                   大语言模型基础概念
+│
+└── PT站/                     PT站使用笔记
 ```
