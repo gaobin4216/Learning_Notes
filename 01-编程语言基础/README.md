@@ -35,6 +35,16 @@
 | (5) | MATLAB环境搭建与工具链配置 | 安装、配置、数据导入导出、绘图基础 |
 | (6) | Simulink：图形化建模与仿真 | Simulink基础操作、常用模块、Stateflow、与MATLAB交互 |
 
+### C#基础与工具链
+
+| 编号 | 文件 | 内容 |
+|------|------|------|
+| (1) | 基础概念：CLR、.NET版本与运行机制 | CLR架构、.NET Framework/Core/5+、版本演进 |
+| (2) | CSharp开发环境选择：Visual Studio、VS Code与Rider | IDE对比与选择、SDK安装 |
+| (3) | 包管理与项目构建：NuGet与MSBuild | NuGet包管理、dotnet CLI、项目模板、发布部署 |
+| (4) | CSharp项目结构与模块化 | 命名空间、程序集、依赖注入、测试 |
+| (5) | CSharp环境搭建与工具链配置 | 完整环境搭建、代码质量工具、Git配置 |
+
 ### Java基础与工具链
 
 | 编号 | 文件 | 内容 |
