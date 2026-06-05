@@ -44,6 +44,8 @@ PDO vs SDO：
 
 ### 1.2 TPDO与RPDO
 
+![TPDO与RPDO](images/image-58.png)
+
 ```
 概念（以从站视角）：
 

@@ -108,6 +108,12 @@ CiA = CAN in Automation
 └─────────────┴────────────────────────────────────────────────┘
 ```
 
+![CANopen概述](images/image-28.png)
+
+![CiA组织](images/image-14.png)
+
+![CANopen常见规范](images/image-13.png)
+
 ---
 
 ## 2. OSI模型与CANopen
@@ -132,6 +138,10 @@ CiA = CAN in Automation
 - CANopen在CAN之上实现了应用层
 - 这种分层设计使得协议灵活可扩展
 ```
+
+![CAN的OSI模型](images/image-10.png)
+
+![CANopen在OSI中的位置](images/image-11.png)
 
 ### 2.2 CANopen在OSI中的位置
 
@@ -190,7 +200,13 @@ CiA = CAN in Automation
 └─────────────────────────────────────────────────────────────┘
 ```
 
+![对象字典结构](images/image-51.png)
+
+![对象字典](images/image-16.png)
+
 ### 3.2 对象字典结构
+
+![对象字典索引位置](images/image-24.png)
 
 ```
 对象字典索引分配：
@@ -262,6 +278,12 @@ CiA = CAN in Automation
 
 ### 3.4 对象字典示例
 
+![对象字典示例1](images/image-26.png)
+
+![对象字典示例2](images/image-17.png)
+
+![对象字典示例3](images/image-12.png)
+
 ```
 示例：配置电机驱动器
 
@@ -284,6 +306,8 @@ CiA = CAN in Automation
 ## 4. CANopen数据帧
 
 ### 4.1 数据帧格式
+
+![CANopen数据帧](images/image-21.png)
 
 ```
 CANopen数据帧结构：
@@ -309,7 +333,13 @@ CANopen数据帧结构：
 - 数据 = 0x40 0x00 0x10 0x00 0x00 0x00 0x00 0x00
 ```
 
+![通讯标识符](images/image-18.png)
+
+![COB-ID结构](images/image-20.png)
+
 ### 4.2 字节序（小端模式）
+
+![CANopen小端模式](images/image-27.png)
 
 ```
 CANopen使用小端模式（Little-Endian）：
@@ -370,6 +400,10 @@ cansend工具：
 ## 5. 状态机
 
 ### 5.1 CANopen状态机
+
+![CANopen状态机](images/image-49.png)
+
+![CANopen状态转换](images/image-29.png)
 
 ```
 CANopen设备有6种状态：
@@ -484,6 +518,8 @@ NMT服务：
 
 ### 6.2 NMT模块控制
 
+![NMT模块控制报文](images/image-30.png)
+
 ```
 NMT模块控制报文：
 
@@ -515,6 +551,14 @@ NMT模块控制报文：
 ```
 
 ### 6.3 心跳报文
+
+![心跳报文](images/image-33.png)
+
+![NMT节点保护报文](images/image-31.png)
+
+![NMT BOOT-UP启动报文](images/image-34.png)
+
+![紧急报文](images/image-35.png)
 
 ```
 心跳报文（Heartbeat）：
@@ -579,6 +623,10 @@ Boot-up报文：
 
 ## 7. SDO通信
 
+![SDO通信概述](images/image-36.png)
+
+![SDO报文格式](images/image-37.png)
+
 ### 7.1 SDO概述
 
 ```
@@ -642,6 +690,14 @@ SDO响应报文（从站→主站）：
 
 ### 7.3 SDO读取示例
 
+![SDO读报文1](images/image-38.png)
+
+![SDO读报文2](images/image-39.png)
+
+![SDO读报文3](images/image-40.png)
+
+![SDO读报文4](images/image-41.png)
+
 ```
 示例：读取设备类型（索引0x1000，子索引0x00）
 
@@ -665,6 +721,14 @@ cansend命令：
 ```
 
 ### 7.4 SDO写入示例
+
+![SDO写报文1](images/image-42.png)
+
+![SDO写报文2](images/image-43.png)
+
+![SDO写报文3](images/image-44.png)
+
+![SDO写报文4](images/image-45.png)
 
 ```
 示例：写入心跳周期（索引0x1017，子索引0x00，值1000ms）
@@ -740,6 +804,22 @@ cansend命令：
 ---
 
 ## 8. PDO通信
+
+![PDO通信概述](images/image-50.png)
+
+![PDO通信参数1](images/image-47.png)
+
+![PDO通信参数2](images/image-48.png)
+
+![PDO通信参数3](images/image-52.png)
+
+![PDO通信参数4](images/image-53.png)
+
+![PDO映射参数](images/image-55.png)
+
+![PDO报文1](images/image-56.png)
+
+![PDO报文2](images/image-57.png)
 
 ### 8.1 PDO概述
 
