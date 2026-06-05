@@ -3,7 +3,7 @@
 **TPDO（Transmit PDO）**：生产者（通常是现场设备）将过程数据打包后发送到总线上的 PDO。
 **RPDO（Receive PDO）**：消费者（通常是控制器或其他节点）接收并解析来自 TPDO 的数据。​
 **一个节点可以同时拥有多路 TPDO 和 RPDO（最多各 4 路），用于不同数据通道的并行实时传输。**
-![alt text](image-58.png)
+![alt text](images/image-58.png)
 
 ## PDO工作原理
 ### 对象字典映射
@@ -74,5 +74,5 @@ SubIndex 1…N：每项 32 bit 编码，结构：
 0x20，表示32，32位4个字节；
 0x10，表示16，16位2个字节；
 0x08，表示8，8位1个字节**
-![alt text](image-56.png)
-![alt text](image-57.png)
+![alt text](images/image-56.png)
+![alt text](images/image-57.png)
