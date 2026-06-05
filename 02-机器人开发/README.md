@@ -34,8 +34,8 @@ CAN 总线与 CANopen 协议的基础知识与实践。
 
 | 编号 | 文件 | 内容 |
 |------|------|------|
-| (1) | CAN与CANopen通信基础 | CAN总线原理、数据帧、CANopen协议栈 |
-| (2) | CAN设备在Linux上使用 | SocketCAN、can-utils工具、SDO控制实例 |
-| (3) | PDO通信参数与映射参数 | RPDO/TPDO配置详解 |
-| (4) | ROS与CAN | socketcan_interface、ros_canopen包 |
-| (5) | TPDO与RPDO | 电机控制中的PDO配置实战 |
+| 01 | CAN总线基础.md | CAN总线原理、差分信号、数据帧、通信过程 |
+| 02 | CANopen协议详解.md | OSI模型、对象字典、状态机、NMT、SDO |
+| 03 | Linux下CAN使用.md | SocketCAN、can-utils、Python/C++编程 |
+| 04 | PDO通信详解.md | TPDO/RPDO配置、传输类型、电机控制实战 |
+| 05 | ROS与CAN集成.md | socketcan_interface、ros_canopen、ROS2集成 |
