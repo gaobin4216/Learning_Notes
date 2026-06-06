@@ -101,11 +101,16 @@ MSYS2 维护六大核心仓库，适配不同开发需求：
 | **CLANGARM64** | Clang | UCRT | ARM64 | `pacman -S mingw-w64-clang-arm64-toolchain` | ARM 设备开发 |
 
 **关键点**：
+- pacman 是 MSYS2 的包管理器，专门用来给 MSYS2 环境安装、更新、卸载软件（比如 git、make、gcc、vim 等）。它只属于 MSYS2 系统，不是 Windows 原生工具，也不是 MinGW 自带的。
+- **只有 MSYS2 自带的 MSYS 终端可以用 pacman 安装软件包，MinGW 终端（mingw64/mingw32）不能直接用 pacman，也不应该用**，因为 MinGW 终端的环境是纯 Windows 编译环境，没有加载 MSYS2 的包管理系统。
 - 每个环境**完全独立、互相隔离**，装的包不能跨环境使用
 - 装包必须用对应前缀，例如：
   - UCRT64 的包：`pacman -S mingw-w64-ucrt-x86_64-<包名>`
   - MINGW64 的包：`pacman -S mingw-w64-x86_64-<包名>`
 - 工具链 = 编译器 + 调试器 + 链接器 + 构建工具 + 系统库，装了就能直接编译
+
+### MSYS下的python使用
+在 MSYS2 的 MINGW64 终端里用 pacman 装的 Python（mingw-w64-x86_64-python），就在这个 MINGW64 终端里直接用 pip 装包即可。
 
 ### VS Code 配置
 
